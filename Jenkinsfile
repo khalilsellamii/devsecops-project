@@ -12,13 +12,26 @@ pipeline {
             steps {
                 // Check out your source code from your version control system, e.g., Git.
                 sh 'rm -rf Jekins_pipeline'
-                sh 'git clone https://github.com/khalilsellamii/Jekins_pipeline'
+                sh 'git clone https://github.com/khalilsellamii/devsecops-project.git'
             }
         }
 
-        stage('Testing') {
+        stage('golang_unit_testing') {
             steps {
-                sh 'python3 src/test.py'
+                sh 'go install github.com/securego/gosec/v2/cmd/gosec@latest'
+                sh '/root/go/bin/gosec ./...'
+            }
+        }
+
+        stage('mysql-db-connection') {
+            steps {
+                sh 'cd src/ && go test'
+            }
+        }
+
+        stage('sonarqube_scanning'){
+            steps {
+                sh 'echo this is for sonarqube sast scan!!'
             }
         }
 
