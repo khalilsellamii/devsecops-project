@@ -15,21 +15,22 @@ pipeline {
                 sh 'git clone https://github.com/khalilsellamii/devsecops-project'
             }
         }
-
+        
         stage('golang_unit_testing') {
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE BUT NOT FATAL'){
-                    sh 'go install github.com/securego/gosec/v2/cmd/gosec@latest'
-                    sh '/root/go/bin/gosec ./...'
+                script{
+                    try {
+                        sh '/root/go/bin/gosec ./...'
+                    }  catch (Exception e) {
+                        echo "Gosec test failed, but continuing the pipeline..."
+                    }
                 }
             }
         }
 
         stage('mysql-db-connection') {
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE BUT NOT FATAL') {
-                    sh 'cd src/ && go test'
-                }            
+                    sh 'cd src/ && go test'            
             }
         }
 
