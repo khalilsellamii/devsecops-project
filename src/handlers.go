@@ -60,8 +60,9 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(password)
 
 		// Authenticate user by querying the database
-		query := "SELECT username FROM users WHERE username = ? AND password = ?"
+		query := fmt.Sprintf("SELECT username FROM users WHERE username = '%s' AND password = '%s'", username, password)
 		//fmt.Println(query)
+
 		var foundUsername string
 		err := db.QueryRow(query, username, password).Scan(&foundUsername)
 		fmt.Println(foundUsername)

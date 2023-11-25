@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: my-persistent-volume
+spec:
+  storageClassName: my-storage-class
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  # Add other specifications as needed
+  persistentVolumeReclaimPolicy: Retain
