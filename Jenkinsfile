@@ -11,8 +11,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Check out your source code from your version control system, e.g., Git.
-                sh 'rm -rf Jekins_pipeline'
-                sh 'git clone https://github.com/khalilsellamii/devsecops-project.git'
+                sh 'rm -rf devsecops-project'
+                sh 'git clone https://github.com/khalilsellamii/devsecops-project'
             }
         }
 
@@ -35,4 +35,5 @@ pipeline {
             }
         }
 
-        
+    }
+}
