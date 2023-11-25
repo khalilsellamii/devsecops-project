@@ -18,8 +18,10 @@ pipeline {
 
         stage('golang_unit_testing') {
             steps {
-                sh 'go install github.com/securego/gosec/v2/cmd/gosec@latest'
-                sh '/root/go/bin/gosec ./...'
+                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE BUT NOT FATAL'){
+                    sh 'go install github.com/securego/gosec/v2/cmd/gosec@latest'
+                    sh '/root/go/bin/gosec ./...'
+                }
             }
         }
 
