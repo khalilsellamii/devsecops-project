@@ -16,7 +16,7 @@ var db *sql.DB
 func init() {
 	// Connect to MySQL database
 	var err error
-	db, err = sql.Open("mysql", "root:khalil@tcp(localhost:3306)/project")
+	db, err = sql.Open("mysql", "root:khalil@tcp(172.17.0.3:3306)/project")
 	var dbUser string
 	err1 := db.QueryRow("SELECT username FROM users WHERE username = 'khalil' AND password = 'khalil' ;").Scan(&dbUser)
 	fmt.Println("dbUser", dbUser)
