@@ -46,7 +46,7 @@ pipeline {
             }
         }
 
-                stage('Build Docker Image') {
+        stage('Build Docker Image') {
             steps {
                 // Build your Docker image. Make sure to specify your Dockerfile and any other build options.
                 sh 'docker build -t khalilsellamii/projet-devops:BUILD_TAG .'
