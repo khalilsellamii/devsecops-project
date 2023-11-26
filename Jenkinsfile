@@ -40,5 +40,30 @@ pipeline {
             }
         }
 
+        stage('sonarqube_scanning'){
+            steps {
+                sh 'echo this is for sonarqube sast scan!!'
+            }
+        }
+
+                stage('Build Docker Image') {
+            steps {
+                // Build your Docker image. Make sure to specify your Dockerfile and any other build options.
+                sh 'docker build -t khalilsellamii/projet-devops:BUILD_TAG .'
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                // Log in to Docker Hub using your credentials
+                sh 'docker login -u khalilsellamii -p $DOCKER_HUB_PASSWORD'
+
+                // Push the built image to Docker Hub
+                sh 'docker push khalilsellamii/projet-devops:BUILD_TAG'
+            }
+        }
+
+    }
+
     }
 }
