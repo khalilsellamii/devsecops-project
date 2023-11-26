@@ -40,12 +40,6 @@ pipeline {
             }
         }
 
-        stage('sonarqube_scanning'){
-            steps {
-                sh 'echo this is for sonarqube sast scan!!'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 // Build your Docker image. Make sure to specify your Dockerfile and any other build options.
