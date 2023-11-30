@@ -123,14 +123,10 @@ pipeline {
                     helm repo update
                     kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.1/cert-manager.crds.yaml
                     helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.13.1
-                //    helm install app-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --set controller.replicaCount=2 --set controller.nodeSelector.'kubernetes\.io/os'=linux --set defaultBackend.nodeSelector.'kubernetes\.io/os'=linux
-
-                // apply the crd offered by cert-manager: issuer which will be selfsigned + x509 ssl/tls certificate
 
                     kubectl apply -f cert-manager-tls/issuer.yaml
                     kubectl apply -f cert-manager-tls/certificate.yaml
 
-                // Now, apply the actual ingress ressource that will expose our golang app service through the nginx-ingress controller
                     kubectl apply -f cert-manager-tls/ingress.yaml
                 '''
             }
