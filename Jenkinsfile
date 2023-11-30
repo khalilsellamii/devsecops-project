@@ -64,11 +64,17 @@ pipeline {
 
         stage('Provision AKS cluster with TF') {
             steps {
+
+                sh '''
                 // tf init for initializing the provider dependancies
-                sh ' terraform fmt && terraform init'
+                   terraform fmt && terraform init
 
                 // TF plan and apply for the actual provisioning of the infra
-                sh ' terraform plan && terraform apply --auto-approve '
+                   terraform plan && terraform apply --auto-approve 
+
+                // Get the kubeconfig as a tf output to remotely connect to the aks cluster
+                   terraform output kube_config > kubeconfig && cat kubeconfig 
+                '''
             }
         }        
 
