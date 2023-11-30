@@ -66,17 +66,43 @@ pipeline {
             steps {
 
                 sh '''
-                // tf init for initializing the provider dependancies
+                   
+                   cd terraform/
+
                    terraform fmt && terraform init
 
-                // TF plan and apply for the actual provisioning of the infra
                    terraform plan && terraform apply --auto-approve 
 
-                // Get the kubeconfig as a tf output to remotely connect to the aks cluster
                    terraform output kube_config > kubeconfig && cat kubeconfig 
+
+                   cd ../
                 '''
             }
-        }        
+        }  
+
+        stage('Deploy on AKS') {
+            steps {
+
+                sh '''
+                   
+                    cd kubernetes/
+
+                    kubectl apply -f db-configmap.yaml
+                    kubectl apply -f db-pass-secret.yaml
+                    kubectl apply -f mysql-stfulset.yaml
+                    sleep 10
+                    kubectl apply -f mysql-svc.yaml
+                    kubectl apply -f my-golang-app-deployment.yaml
+                    sleep 10
+                    kubectl apply -f golang-svc.yaml
+
+                    sleep 15
+
+                    kubectl get all,pv,pvc,storageClass,secret,cm
+
+                '''
+            }
+        }              
 
     }
 
