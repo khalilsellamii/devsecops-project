@@ -64,21 +64,26 @@ pipeline {
 
         stage('Provision AKS cluster with TF') {
             steps {
+                script {
 
-                sh '''
-                   
-                   cd terraform/
+                    sh '''
+                       
+                       cd terraform/
+    
+                       terraform fmt && terraform init
+    
+                       terraform plan && terraform apply --auto-approve 
+    
+                       terraform output kube_config > kubeconfig && cat kubeconfig 
+    
+                       cd ../
+                    '''
+                    def kubeconfig = sh(script: 'terraform output -raw kube_config', returnStdout: true).trim()
+                    env.KUBECONFIG = kubeconfig
 
-                   terraform fmt && terraform init
-
-                   terraform plan && terraform apply --auto-approve 
-
-                   terraform output kube_config > kubeconfig && cat kubeconfig 
-
-                   cd ../
-                '''
+                }
             }
-        }  
+        }
 
         stage('Deploy on AKS') {
             steps {
@@ -86,7 +91,8 @@ pipeline {
                 sh '''
                    
                     cd kubernetes/
-
+                    export KUBECONFIG=$KUBECONFIG
+                    sleep 5
                     kubectl apply -f db-configmap.yaml
                     kubectl apply -f db-pass-secret.yaml
                     kubectl apply -f mysql-stfulset.yaml
