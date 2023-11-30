@@ -3,15 +3,15 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_group" "salouh" {
-  name     = "salouh"
+resource "azurerm_resource_group" "projet-devops" {
+  name     = "projet-devops"
   location = "France central"
 }
 
-resource "azurerm_kubernetes_cluster" "salouh-cluster" {
-  name                = "salouh-cluster"
-  location            = azurerm_resource_group.salouh.location
-  resource_group_name = azurerm_resource_group.salouh.name
+resource "azurerm_kubernetes_cluster" "projet-devops-cluser-aks" {
+  name                = "projet-devops-cluser-aks"
+  location            = azurerm_resource_group.projet-devops.location
+  resource_group_name = azurerm_resource_group.projet-devops.name
   dns_prefix          = "exampleaks1"
 
   default_node_pool {
@@ -30,12 +30,12 @@ resource "azurerm_kubernetes_cluster" "salouh-cluster" {
 }
 
 output "client_certificate" {
-  value     = azurerm_kubernetes_cluster.salouh-cluster.kube_config.0.client_certificate
+  value     = azurerm_kubernetes_cluster.projet-devops-cluser-aks.kube_config.0.client_certificate
   sensitive = true
 }
 
 output "kube_config" {
-  value = azurerm_kubernetes_cluster.salouh-cluster.kube_config_raw
+  value = azurerm_kubernetes_cluster.projet-devops-cluser-aks.kube_config_raw
 
   sensitive = true
 }
