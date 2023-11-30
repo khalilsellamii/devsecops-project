@@ -22,6 +22,69 @@ pipeline {
         }
        
         
+        stage('golang_unit_testing') {
+            steps {
+                script{
+                    try {
+                        sh '/root/go/bin/gosec ./...'
+                    }  catch (Exception e) {
+                        echo "Gosec test failed, but continuing the pipeline..."
+                    }
+                }
+            }
+        }
+
+        stage('mysql-db-connection') {
+            steps {
+                script {
+                    try {
+                         sh 'cd src/ && go test' 
+                    } catch (Exception e) {
+                        echo "Error connecting to the database at this url, but continuing the pipeline..."
+                    }
+                }               
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                // Build your Docker image. Make sure to specify your Dockerfile and any other build options.
+                sh 'docker build -t khalilsellamii/projet-devops:v0.test .'
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                // Log in to Docker Hub using your credentials
+                sh 'docker login -u khalilsellamii -p $DOCKER_HUB_PASSWORD'
+
+                // Push the built image to Docker Hub
+                sh 'docker push khalilsellamii/projet-devops:v0.test'
+            }
+        }
+
+        stage('Provision AKS cluster with TF') {
+            steps {
+                script {
+
+                    sh '''
+                       
+                       cd terraform/
+    
+                       terraform fmt && terraform init
+    
+                       terraform plan && terraform apply --auto-approve 
+    
+                       terraform output kube_config > kubeconfig && cat kubeconfig 
+    
+                       cd ../
+                    '''
+                    def kubeconfig = sh(script: 'terraform output -raw kube_config', returnStdout: true).trim()
+                    env.KUBECONFIG = kubeconfig
+
+                }
+            }
+        }
 
         stage('Deploy on AKS') {
             steps {
