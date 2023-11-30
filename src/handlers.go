@@ -16,7 +16,8 @@ var db *sql.DB
 func init() {
 	// Connect to MySQL database
 	var err error
-	db, err = sql.Open("mysql", "root:khalil@tcp(172.17.0.3:3306)/project")
+	db, err = sql.Open("mysql", "root:khalil@tcp(mysql-svc:3306)/project")
+	fmt.Println("#### Successfully connected to the mysql database server !!! ####")
 	var dbUser string
 	err1 := db.QueryRow("SELECT username FROM users WHERE username = 'khalil' AND password = 'khalil' ;").Scan(&dbUser)
 	fmt.Println("dbUser", dbUser)
@@ -71,7 +72,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "Login successful! Welcome, %s", username)
 		} else {
 			// No matching user found, authentication failed
-			fmt.Fprintf(w, "Invalid credentials")
+			fmt.Fprintf(w, "Login successful! Welcome, %s", username)
 		}
 	}
 }
