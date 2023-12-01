@@ -185,7 +185,21 @@ pipeline {
 
                 
             }
-        }                    
+        }  
+
+        stage('Add custom alerting rule') {
+            steps {
+                sh '''
+                    export KUBECONFIG=/var/jenkins_home/workspace/projet-devops/terraform/kubeconfig
+                    kubectl apply -f ./monitoring/alert-rule.yaml --namespace monitoring
+                    
+                    sleep 25
+                    
+                    chmod +x monitoring/stress-script.sh
+                    ./monitoring/stress-script.sh
+                '''
+            }
+        }                 
 
     }
     post {
