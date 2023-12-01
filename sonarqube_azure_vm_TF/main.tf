@@ -1,3 +1,9 @@
+provider "azurerm" {
+  skip_provider_registration = true # This is only required when the User, Service Principal, or Identity running Terraform lacks the permissions to register Azure Resource Providers.
+  features {}
+}
+
+
 variable "prefix" {
   default = "tfvmex"
 }
@@ -52,7 +58,7 @@ resource "azurerm_virtual_machine" "main" {
     sku       = "22_04-lts"
     version   = "latest"
   }
-  
+
   storage_os_disk {
     name              = "myosdisk1"
     caching           = "ReadWrite"
@@ -63,15 +69,14 @@ resource "azurerm_virtual_machine" "main" {
   os_profile {
     computer_name  = "khalil"
     admin_username = "khalil"
-    admin_password = "khalil"
-    admin_ssh_key {
-        username   = "khalil"
-        public_key = file("/home/khalil/.ssh/azure_app_rsa.pub") 
-    }
   }
 
   os_profile_linux_config {
-    disable_password_authentication = false
+    disable_password_authentication = true
+    ssh_keys {
+        key_data = file("/home/khalil/.ssh/azure_app_rsa.pub") 
+        path = "/home/khalil/.ssh/authorized_keys"
+    }
   }
   tags = {
     environment = "testing"
