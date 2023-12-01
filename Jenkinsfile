@@ -44,7 +44,16 @@ pipeline {
                 }               
             }
         }
-     
+
+        stage('sonarqube_scanner') {
+            steps {
+                sh '''
+                    /opt/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner --version
+                    /opt/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner   -Dsonar.projectKey=projet-devops   -Dsonar.sources=.   -Dsonar.host.url=http://sonarqube-server:9000   -Dsonar.token=sqp_fb5d4097f0f1c87ea8fed4ef0c13e98456d3a82a
+                '''
+            }
+        }   
+
         stage('Build Docker Image') {
             steps {
                 // Build your Docker image. Make sure to specify your Dockerfile and any other build options.
