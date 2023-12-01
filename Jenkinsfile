@@ -20,8 +20,7 @@ pipeline {
                 sh 'git clone https://github.com/khalilsellamii/devsecops-project'
             }
         }
-       
-        
+          
         stage('golang_unit_testing') {
             steps {
                 script{
@@ -33,8 +32,6 @@ pipeline {
                 }
             }
         }
-
-
 
         stage('mysql-db-connection-test') {
             steps {
@@ -48,7 +45,6 @@ pipeline {
             }
         }
      
-
         stage('Build Docker Image') {
             steps {
                 // Build your Docker image. Make sure to specify your Dockerfile and any other build options.
