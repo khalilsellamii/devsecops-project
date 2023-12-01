@@ -78,6 +78,12 @@ resource "azurerm_virtual_machine" "main" {
         path = "/home/khalil/.ssh/authorized_keys"
     }
   }
+  provisioner "remote-exec" {
+    inline = [
+      " chmod +x ./install_docker.sh ",    
+      " ./install-docker.sh "              
+    ]
+  }
   tags = {
     environment = "testing"
   }
