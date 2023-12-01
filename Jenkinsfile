@@ -127,7 +127,7 @@ pipeline {
 
                 sh '''
                     
-                    export KUBECONFIG=terraform/kubeconfig
+                    export KUBECONFIG=/var/jenkins_home/workspace/projet-devops/terraform/kubeconfig
                     cd kubernetes/
                     sleep 5
                     kubectl apply -f db-configmap.yaml
@@ -152,7 +152,7 @@ pipeline {
 
                 sh '''
 
-                    export KUBECONFIG=terraform/kubeconfig
+                    export KUBECONFIG=/var/jenkins_home/workspace/projet-devops/terraform/kubeconfig
 
                     helm repo add jetstack https://charts.jetstack.io
                     helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
@@ -174,7 +174,7 @@ pipeline {
 
                     sh '''
 
-                        export KUBECONFIG=terraform/kubeconfig
+                        export KUBECONFIG=/var/jenkins_home/workspace/projet-devops/terraform/kubeconfig
                         kubectl create ns monitoring 
                         helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
                         helm repo update
