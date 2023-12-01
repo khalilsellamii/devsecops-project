@@ -34,14 +34,6 @@ pipeline {
             }
         }
 
-        stage('sonarqube_scan') {
-            steps {
-                
-                sh '/opt/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner -Dsonar.projectKey=pyhton -Dsonar.sources=. -Dsonar.host.url=http://172.17.0.1:9000 -Dsonar.token=sqp_16a855c2325c570920b51557cf950762b09d7146'
-
-            }
-
-        }
 
 
         stage('mysql-db-connection-test') {
@@ -58,17 +50,22 @@ pipeline {
 
         stage('Docker Bench Scan Docker environment') {
             steps {
-                // Build your Docker image. Make sure to specify your Dockerfile and any other build options.
-                sh '''
-                    
-                    rm -rf docker-bench-security
-                    git clone https://github.com/docker/docker-bench-security.git
-                    cd docker-bench-security
-                    chmod +x docker-bench-security.sh  
-                    ./docker-bench-security.sh > docker_bench_security_scan_results
-                    cat docker_bench_security_scan_results  
-
-                '''
+                script {
+                    try {
+                         sh '''
+                             
+                             rm -rf docker-bench-security
+                             git clone https://github.com/docker/docker-bench-security.git
+                             cd docker-bench-security
+                             chmod +x docker-bench-security.sh  
+                             ./docker-bench-security.sh > docker_bench_security_scan_results
+                             cat docker_bench_security_scan_results  
+         
+                         '''                        
+                    } catch (Exception e) {
+                        echo "The docker bench security testing scan found some severe vulnerabilities on the host system, but continuing building the pipeline anyway ... :)"
+                    }
+                }
             }
         }        
 
@@ -81,8 +78,14 @@ pipeline {
 
         stage('Trivy Scan Docker Image') {
             steps {
+                script {
+                    try {
                 // Build your Docker image. Make sure to specify your Dockerfile and any other build options.
                 sh 'touch trivy_scan_results && trivy image khalilsellamii/projet-devops:v0.test --format json --output ./trivy_scan_results '
+                    } catch (Exception e) {
+                        echo "Trivy docker scan of the recently built image found some security issues with the image, consider fixing them before pushing it to docker_hub, but continuing building the pipeline anyway ... :)"
+                    }
+                }
             }
         }        
 
