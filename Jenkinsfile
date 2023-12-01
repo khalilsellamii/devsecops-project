@@ -79,8 +79,6 @@ pipeline {
     
                        cd ../
                     '''
-                    def kubeconfig = sh(script: 'terraform output -raw kube_config', returnStdout: true).trim()
-                    env.KUBECONFIG = kubeconfig
 
                 }
             }
