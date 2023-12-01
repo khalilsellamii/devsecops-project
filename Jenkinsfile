@@ -191,5 +191,12 @@ pipeline {
         }                    
 
     }
-
+    post {
+    success {
+        echo ' Pipeline completed successfully! :)) '
+        echo ' Now, The Golang application is successfully deployed on the AKS cluster :)) '
+        echo ' Visit th public DNS:  https://khalil-projet-devops.20.74.61.124.nip.io to access the application :) '
     }
+  }
+
+}
