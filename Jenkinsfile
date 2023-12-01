@@ -54,12 +54,13 @@ pipeline {
                     try {
                          sh '''
                              
-                             rm -rf docker-bench-security
-                             git clone https://github.com/docker/docker-bench-security.git
-                             cd docker-bench-security
-                             chmod +x docker-bench-security.sh  
-                             ./docker-bench-security.sh > docker_bench_security_scan_results
-                             cat docker_bench_security_scan_results  
+                            rm -rf docker-bench-security
+                            git clone https://github.com/docker/docker-bench-security.git
+                            cd docker-bench-security
+                            chmod +x docker-bench-security.sh  
+                            touch docker_bench_security_scan_results
+                            ./docker-bench-security.sh > docker_bench_security_scan_results
+                            cat docker_bench_security_scan_results  
          
                          '''                        
                     } catch (Exception e) {
