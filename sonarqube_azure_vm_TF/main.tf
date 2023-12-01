@@ -46,28 +46,30 @@ resource "azurerm_virtual_machine" "main" {
   # Uncomment this line to delete the data disks automatically when deleting the VM
   delete_data_disks_on_termination = true
 
-  admin_ssh_key {
-    username   = "khalil"
-    public_key = file("/home/khalil/.ssh/azure_app_rsa.pub") # Path to your SSH public key
-  }
-
   storage_image_reference {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
     sku       = "22_04-lts"
     version   = "latest"
   }
+  
   storage_os_disk {
     name              = "myosdisk1"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
+
   os_profile {
-    computer_name  = "hostname"
-    admin_username = "testadmin"
-    admin_password = "Password1234!"
+    computer_name  = "khalil"
+    admin_username = "khalil"
+    admin_password = "khalil"
+    admin_ssh_key {
+        username   = "khalil"
+        public_key = file("/home/khalil/.ssh/azure_app_rsa.pub") 
+    }
   }
+
   os_profile_linux_config {
     disable_password_authentication = false
   }
