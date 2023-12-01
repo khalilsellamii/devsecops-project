@@ -34,7 +34,17 @@ pipeline {
             }
         }
 
-        stage('mysql-db-connection') {
+        stage('sonarqube_scan') {
+            steps {
+                
+                sh '/opt/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner -Dsonar.projectKey=pyhton -Dsonar.sources=. -Dsonar.host.url=http://172.17.0.1:9000 -Dsonar.token=sqp_16a855c2325c570920b51557cf950762b09d7146'
+
+            }
+
+        }
+
+
+        stage('mysql-db-connection-test') {
             steps {
                 script {
                     try {
@@ -46,12 +56,35 @@ pipeline {
             }
         }
 
+        stage('Docker Bench Scan Docker environment') {
+            steps {
+                // Build your Docker image. Make sure to specify your Dockerfile and any other build options.
+                sh '''
+                    
+                    rm -rf docker-bench-security
+                    git clone https://github.com/docker/docker-bench-security.git
+                    cd docker-bench-security
+                    chmod +x docker-bench-security.sh  
+                    ./docker-bench-security.sh > docker_bench_security_scan_results
+                    cat docker_bench_security_scan_results  
+
+                '''
+            }
+        }        
+
         stage('Build Docker Image') {
             steps {
                 // Build your Docker image. Make sure to specify your Dockerfile and any other build options.
                 sh 'docker build -t khalilsellamii/projet-devops:v0.test .'
             }
         }
+
+        stage('Trivy Scan Docker Image') {
+            steps {
+                // Build your Docker image. Make sure to specify your Dockerfile and any other build options.
+                sh 'touch trivy_scan_results && trivy image khalilsellamii/projet-devops:v0.test --format json --output ./trivy_scan_results '
+            }
+        }        
 
         stage('Push to Docker Hub') {
             steps {
@@ -76,6 +109,8 @@ pipeline {
                        terraform plan && terraform apply --auto-approve 
     
                        terraform output kube_config > kubeconfig && cat kubeconfig 
+
+                       sed -i '1d;$d' kubeconfig && cat kubeconfig
     
                        cd ../
                     '''
@@ -88,7 +123,8 @@ pipeline {
             steps {
 
                 sh '''
-                   
+                    
+                    export KUBECONFIG=terraform/kubeconfig
                     cd kubernetes/
                     sleep 5
                     kubectl apply -f db-configmap.yaml
@@ -113,6 +149,7 @@ pipeline {
 
                 sh '''
 
+                    export KUBECONFIG=terraform/kubeconfig
 
                     helm repo add jetstack https://charts.jetstack.io
                     helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
@@ -134,6 +171,7 @@ pipeline {
 
                     sh '''
 
+                        export KUBECONFIG=terraform/kubeconfig
                         kubectl create ns monitoring 
                         helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
                         helm repo update
