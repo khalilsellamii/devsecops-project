@@ -10,11 +10,11 @@ metadata:
 spec:
   tls:
   - hosts:
-    - khalil-projet-devops.20.74.25.214.nip.io
+    - khalil-projet-devops.20.74.61.124.nip.io
     secretName: my-self-signed-certificate
   ingressClassName: nginx
   rules:
-  - host: khalil-projet-devops.20.74.25.214.nip.io
+  - host: khalil-projet-devops.20.74.61.124.nip.io
     http:
       paths:
       - path: /
