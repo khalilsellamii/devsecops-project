@@ -160,6 +160,7 @@ pipeline {
                     helm repo update
                     kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.1/cert-manager.crds.yaml
                     helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.13.1
+                    helm install app-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --set controller.replicaCount=2 --set controller.nodeSelector."kubernetes\\.io/os"=linux --set defaultBackend.nodeSelector."kubernetes\\.io/os"=linux
 
                     kubectl apply -f cert-manager-tls/issuer.yaml
                     kubectl apply -f cert-manager-tls/certificate.yaml
