@@ -47,28 +47,7 @@ pipeline {
                 }               
             }
         }
-
-        stage('Docker Bench Scan Docker environment') {
-            steps {
-                script {
-                    try {
-                         sh '''
-                             
-                            rm -rf docker-bench-security
-                            git clone https://github.com/docker/docker-bench-security.git
-                            cd docker-bench-security
-                            chmod +x docker-bench-security.sh  
-                            touch docker_bench_security_scan_results
-                            ./docker-bench-security.sh > docker_bench_security_scan_results
-                            cat docker_bench_security_scan_results  
-         
-                         '''                        
-                    } catch (Exception e) {
-                        echo "The docker bench security testing scan found some severe vulnerabilities on the host system, but continuing building the pipeline anyway ... :)"
-                    }
-                }
-            }
-        }        
+     
 
         stage('Build Docker Image') {
             steps {
@@ -99,6 +78,28 @@ pipeline {
                 sh 'docker push khalilsellamii/projet-devops:v0.test'
             }
         }
+
+        stage('Docker Bench Scan Docker environment') {
+            steps {
+                script {
+                    try {
+                         sh '''
+                             
+                            rm -rf docker-bench-security
+                            git clone https://github.com/docker/docker-bench-security.git
+                            cd docker-bench-security
+                            chmod +x docker-bench-security.sh  
+                            touch docker_bench_security_scan_results
+                            ./docker-bench-security.sh > docker_bench_security_scan_results
+                            cat docker_bench_security_scan_results  
+         
+                         '''                        
+                    } catch (Exception e) {
+                        echo "The docker bench security testing scan found some severe vulnerabilities on the host system, but continuing building the pipeline anyway ... :)"
+                    }
+                }
+            }
+        }           
 
         stage('Provision AKS cluster with TF') {
             steps {
