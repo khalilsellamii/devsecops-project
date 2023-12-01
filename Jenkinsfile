@@ -126,9 +126,8 @@ pipeline {
             steps {
 
                 sh '''
-                    pwd
-                    ls ./terraform/
-                    export KUBECONFIG=./terraform/kubeconfig
+                    pwd && ls ./terraform
+                    export KUBECONFIG=/var/jenkins_home/workspace/projet-devops/terraform/kubeconfig
                     cd kubernetes/
                     sleep 5
                     kubectl apply -f db-configmap.yaml
