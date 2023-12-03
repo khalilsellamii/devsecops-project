@@ -170,8 +170,7 @@ pipeline {
 
                     kubectl apply -f cert-manager-tls/issuer.yaml
                     kubectl apply -f cert-manager-tls/certificate.yaml
-
-                    kubectl apply -f cert-manager-tls/ingress.yaml
+                    
                 '''
             }
         }
