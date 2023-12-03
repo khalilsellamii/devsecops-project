@@ -5,6 +5,6 @@ metadata:
 spec:
   secretName: my-self-signed-certificate
   dnsNames:
-    - khalil-projet-devops.20.74.61.124.nip.io
+    - khalil-projet-devops.20.74.29.146.nip.io
   issuerRef:
     name: selfsigned-issuer

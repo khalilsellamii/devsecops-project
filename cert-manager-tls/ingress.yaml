@@ -10,11 +10,11 @@ metadata:
 spec:
   tls:
   - hosts:
-    - khalil-projet-devops.20.74.61.124.nip.io
+    - khalil-projet-devops.20.74.29.146.nip.io
     secretName: my-self-signed-certificate
   ingressClassName: nginx
   rules:
-  - host: khalil-projet-devops.20.74.61.124.nip.io
+  - host: khalil-projet-devops.20.74.29.146.nip.io
     http:
       paths:
       - path: /
@@ -24,4 +24,3 @@ spec:
             name: my-golang-app
             port:
               number: 80
-

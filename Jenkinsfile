@@ -156,28 +156,36 @@ pipeline {
 
         stage('Helm & Cert-manager & Nginx-Ingress') {
             steps {
+                script {
+                    try {
+                        sh '''
 
-                sh '''
+                        export KUBECONFIG=/var/jenkins_home/workspace/projet-devops/terraform/kubeconfig
 
-                    export KUBECONFIG=/var/jenkins_home/workspace/projet-devops/terraform/kubeconfig
+                        helm repo add jetstack https://charts.jetstack.io
+                        helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+                        helm repo update
+                        kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.1/cert-manager.crds.yaml
+                        helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.13.1
+                        helm install app-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --set controller.replicaCount=2 --set controller.nodeSelector."kubernetes\\.io/os"=linux --set defaultBackend.nodeSelector."kubernetes\\.io/os"=linux
 
-                    helm repo add jetstack https://charts.jetstack.io
-                    helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-                    helm repo update
-                    kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.1/cert-manager.crds.yaml
-                    helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.13.1
-                    helm install app-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --set controller.replicaCount=2 --set controller.nodeSelector."kubernetes\\.io/os"=linux --set defaultBackend.nodeSelector."kubernetes\\.io/os"=linux
+                        kubectl apply -f cert-manager-tls/issuer.yaml
+                        kubectl apply -f cert-manager-tls/certificate.yaml
 
-                    kubectl apply -f cert-manager-tls/issuer.yaml
-                    kubectl apply -f cert-manager-tls/certificate.yaml
-                    
-                '''
+
+                    '''
+                    } catch (Exception e) {
+                        echo "the helm packages that you are trying to install are already installed with the same name"
+                    }
+                }
             }
         }
 
 
         stage('Monitoring Prometheus & Grafana') {
             steps {
+                script {
+                    try {
 
                     sh '''
 
@@ -191,7 +199,11 @@ pipeline {
                     '''
 
 
-                
+            
+                    } catch (Exception e) {
+                        echo "the prometheus operator monitoring stack is already installed with the same name "
+                    }
+                }
             }
         }  
 
@@ -204,7 +216,6 @@ pipeline {
                     sleep 25
                     
                     chmod +x monitoring/stress-script.sh
-                    ./monitoring/stress-script.sh
                 '''
             }
         }                 
