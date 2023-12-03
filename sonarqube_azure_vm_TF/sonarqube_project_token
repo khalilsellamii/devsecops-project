@@ -1,3 +1,11 @@
-sqp_fb5d4097f0f1c87ea8fed4ef0c13e98456d3a82a
+'*' PROJET_TOKEN:
+    sqp_c8c0f860890b074339b03a624b4aa157b0e19211
 
-sonar-scanner   -Dsonar.projectKey=projet-devops   -Dsonar.sources=.   -Dsonar.host.url=http://localhost:9000   -Dsonar.token=sqp_fb5d4097f0f1c87ea8fed4ef0c13e98456d3a82a
+'*' SCANNER_COMMAND:
+    sonar-scanner \
+  -Dsonar.projectKey=projet-devops \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=http://localhost:9999 \
+  -Dsonar.token=sqp_c8c0f860890b074339b03a624b4aa157b0e19211
+
+
