@@ -12,6 +12,7 @@ resource "azurerm_kubernetes_cluster" "projet-devops-cluser-aks" {
   name                = "projet-devops-cluser-aks"
   location            = azurerm_resource_group.projet-devops.location
   resource_group_name = azurerm_resource_group.projet-devops.name
+  http_application_routing_enabled = true
   dns_prefix          = "exampleaks1"
 
   default_node_pool {
