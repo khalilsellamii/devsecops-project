@@ -49,7 +49,7 @@ pipeline {
             steps {
                 sh '''
                     /opt/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner --version
-                    /opt/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner   -Dsonar.projectKey=projet-devops   -Dsonar.sources=.   -Dsonar.host.url=http://sonarqube-server:9999   -Dsonar.token=sqp_fb5d4097f0f1c87ea8fed4ef0c13e98456d3a82a
+                    /opt/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner -Dsonar.projectKey=projet-devops -Dsonar.sources=. -Dsonar.host.url=http://sonarqube-server:9999 -Dsonar.token=sqp_c8c0f860890b074339b03a624b4aa157b0e19211
                 '''
             }
         }   
@@ -92,7 +92,7 @@ pipeline {
                              
                             rm -rf docker-bench-security
                             git clone https://github.com/docker/docker-bench-security.git
-                            cd docker-bench-security
+                            cd docker-bench-security/
                             chmod +x docker-bench-security.sh  
                             touch docker_bench_security_scan_results
                             ./docker-bench-security.sh > docker_bench_security_scan_results
