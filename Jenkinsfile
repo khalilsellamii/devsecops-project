@@ -214,6 +214,9 @@ pipeline {
                     kubectl apply -f ./monitoring/alert-rule.yaml --namespace monitoring
                     
                     sleep 25
+
+                    kubectl apply -f ./monitoring/email-secret.yaml --namespace monitoring
+                    kubectl apply -f ./monitoring/alert-manager-config.yaml --namespace monitoring
                     
                     chmod +x monitoring/stress-script.sh
                 '''
