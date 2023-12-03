@@ -2,7 +2,7 @@
 
 target="https://khalil-wp.20.199.32.73.nip.io"
 
-num_iterations=30
+num_iterations=2
 
 
 for ((i = 1; i <= num_iterations; i++)); do
